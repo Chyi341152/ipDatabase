@@ -34,12 +34,10 @@ def sendMsgFromText(content):
     # server = smtplib.SMTP('smtp.gmail.com', 587)
     server = smtplib.SMTP("smtp.live.com", 587)
     server.starttls()  # There's a security function needed to connect to the Gmail server
-    account = b'UVlRMTE1NDRAaG90bWFpbC5jb20='
-    passwd = b'TWFjaW50b3NoMTU4OTY4'
-    # server.login("QYQ11544@hotmail.com", "Macintosh158968")
-    # bytes to string
+    account = b'UVlRMTE1NDRAaG9'
+    passwd = b'TWFMTU4OTY4'
     server.login(base64.b64decode(account).decode('ascii'), base64.b64decode(passwd).decode('ascii'))
-    toEmail, fromEmail = "chyiyaqing@gmail.com", "QYQ11544@hotmail.com"
+    toEmail, fromEmail = "test@gmail.com", "test@hotmail.com"
 
     msg = MIMEMultipart()
     msg['From'] = fromEmail
