@@ -1,0 +1,25 @@
+项目介绍:
+
+    data/
+        global_region.csv
+        ip.merge.txt
+            -- IP 数据来自纯真和淘宝的IP数据库,每次抓取生成ip.merge.txt,进而根据ip.merge.txt生成屁region.db文件
+            -- ip.merge.txt 中每一行对应一条完整记录,每一条记录由IP段和数据组成.
+            223.252.160.0|223.252.191.255|香港|0|香港特别行政区|0|0
+            只有中国的数据精确到城市,其他国家只能定位到国家,
+            从左到右分贝表示: 起始IP|结束IP|国家|区域|省份|市|运营商.无数据区域默认为0
+            最新ip.merge.txt 有213149条记录,并且IP地址按照升序排序
+        ip2region.db
+            -- 如何快速从ip.merge.txt中找到IP所属记录?最简单的办法就是顺序遍历,当该IP在某条记录起始和结束IP之间时,命中
+            -- 上面是低效的方法,如何提高查询性能?使用索引.所以ip2region.db使用内建索引,直接将性能提升到0.0x毫秒级别
+            -- 根据ip.merge.txt, 将所有数据生成一份索引.并和数据地址组成一个索引项(index block),然后按照起始ip升序
+            排列组成索引,并存储到数据文件的末尾,最终生成的ip2region.db; 然后去重优化
+
+            ip2region db file structure
+                super block (8 bytes) : first index ptr(4bytes)     last index ptr (4 bytes)
+                header index (8 K)
+                data
+                index index partion(4K) index partion (4K)
+    src/
+
+    任何客户端b-tree都比binary算法快,当然Memory算法固然时最快的
